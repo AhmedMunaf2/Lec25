@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المحاضرة ٢٥ — شرح قطر الندى وبلّ الصدى (ملخص تفاعلي مبسّط)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f7f1e1; --paper2:#ede2c6; --card:#fffdf7;
+  --ink:#26190d; --ink2:#5c4732;
+  --gold:#b5800a; --gold2:#d9a520; --gold-soft:rgba(181,128,10,.12);
+  --green:#0d6b4e; --green-soft:rgba(13,107,78,.1);
+  --red:#a6362a; --red-soft:rgba(166,54,42,.1);
+  --blue:#23498c; --blue-soft:rgba(35,73,140,.1);
+  --border:rgba(181,128,10,.28);
+  --shadow:0 10px 28px rgba(38,25,13,.09);
+}
+.dark{
+  --paper:#150f09; --paper2:#21180e; --card:#261c11;
+  --ink:#f3ead8; --ink2:#cbb592;
+  --gold:#e0ab26; --gold2:#f2c144; --gold-soft:rgba(224,171,38,.15);
+  --green:#4ac99e; --green-soft:rgba(74,201,158,.14);
+  --red:#ec7b6b; --red-soft:rgba(236,123,107,.14);
+  --blue:#8da9e4; --blue-soft:rgba(141,169,228,.14);
+  --border:rgba(224,171,38,.3);
+  --shadow:0 12px 32px rgba(0,0,0,.48);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}
+body{
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  background:var(--paper);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(181,128,10,.06) 0 2px, transparent 3px),
+    radial-gradient(circle at 85% 70%, rgba(181,128,10,.05) 0 2px, transparent 3px);
+  background-size:90px 90px,120px 120px;
+  color:var(--ink);
+  line-height:1.95;
+  transition:background .35s,color .35s;
+}
+
+/* شريط التقدم */
+#progress{
+  position:fixed;top:0;right:0;height:5px;width:0;
+  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--green));
+  z-index:100;transition:width .12s;
+}
+.wrap{max-width:940px;margin:auto;padding:0 20px}
+
+/* الترويسة */
+header{
+  padding:64px 20px 44px;text-align:center;position:relative;
+  border-bottom:3px double var(--gold);overflow:hidden;
+  background:linear-gradient(180deg,var(--gold-soft),transparent);
+}
+header::before,header::after{
+  content:"۞";position:absolute;top:18px;font-size:2rem;color:var(--gold);opacity:.6
+}
+header::before{right:24px} header::after{left:24px}
+.basmala{font-family:'Scheherazade New',serif;font-size:1.55rem;color:var(--ink2)}
+header h1{
+  font-family:'Aref Ruqaa',serif;font-size:clamp(2rem,5vw,3.1rem);
+  color:var(--ink);margin:10px 0 8px;line-height:1.45;
+}
+header h1 b{color:var(--gold)}
+.sub{color:var(--ink2);font-size:1.06rem;max-width:680px;margin:0 auto}
+.intro-box{
+  max-width:760px;margin:22px auto 0;background:var(--card);
+  border:1.5px solid var(--border);border-radius:14px;padding:14px 20px;
+  box-shadow:var(--shadow);font-size:.96rem;color:var(--ink);
+}
+.intro-box b{color:var(--gold)}
+
+/* أزرار التنقل السريع */
+.chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;font-family:inherit;
+  text-decoration:none;color:var(--ink);font-weight:600;
+  background:var(--card);border:1.5px solid var(--gold);border-radius:40px;
+  padding:7px 18px;font-size:.9rem;box-shadow:var(--shadow);
+  cursor:pointer;transition:transform .25s,background .25s,color .25s;
+}
+.chip:hover{transform:translateY(-3px);background:var(--gold);color:#fff}
+
+/* الأقسام */
+section{padding:48px 0;border-bottom:1px dashed var(--border)}
+section:last-of-type{border-bottom:none}
+.shead{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.shead-title{display:flex;align-items:center;gap:14px}
+.num{
+  font-family:'Aref Ruqaa',serif;background:var(--gold);color:#fff;
+  width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;flex-shrink:0;box-shadow:var(--shadow);
+}
+h2{font-family:'Aref Ruqaa',serif;font-size:clamp(1.45rem,3.5vw,2.05rem)}
+h3.subhead{
+  font-family:'Aref Ruqaa',serif;font-size:1.35rem;color:var(--gold);
+  margin:28px 0 12px;display:flex;align-items:center;gap:8px;
+}
+.lead{color:var(--ink2);margin-bottom:22px;padding-right:64px;font-size:1.02rem}
+.divider{text-align:center;color:var(--gold);font-size:1.35rem;margin:6px 0 22px;letter-spacing:10px;opacity:.75}
+
+/* زر فتح/طي الكل */
+.toggle-all{
+  background:var(--paper2);border:1px solid var(--gold);color:var(--ink);
+  border-radius:20px;padding:5px 14px;font-family:inherit;font-size:.84rem;
+  font-weight:600;cursor:pointer;transition:.25s;
+}
+.toggle-all:hover{background:var(--gold);color:#fff}
+
+/* بطاقات القواعد والشرح */
+.rule{
+  background:var(--card);border-right:5px solid var(--green);border-radius:14px;
+  padding:18px 22px;box-shadow:var(--shadow);margin-bottom:16px;
+  border-top:1px solid var(--border);border-left:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.rule.warn{border-right-color:var(--red)}
+.rule.gold{border-right-color:var(--gold)}
+.rule.blue{border-right-color:var(--blue)}
+.rule-title{font-weight:700;font-size:1.04rem;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.tag{
+  display:inline-block;font-size:.78rem;font-weight:700;padding:2px 12px;
+  border-radius:20px;color:#fff;line-height:1.6;
+}
+.tag.g{background:var(--green)}
+.tag.r{background:var(--red)}
+.tag.y{background:var(--gold)}
+.tag.b{background:var(--blue)}
+
+.aya{
+  font-family:'Scheherazade New',serif;font-size:1.38rem;
+  color:var(--green);font-weight:700;display:inline-block;margin:2px 0;
+}
+.dark .aya{color:#7fd6b6}
+.poem{
+  font-family:'Scheherazade New',serif;font-size:1.28rem;
+  color:var(--blue);font-weight:700;background:var(--blue-soft);
+  padding:8px 14px;border-radius:8px;margin:8px 0;display:block;text-align:center;
+}
+.ex{
+  background:var(--paper2);border-radius:10px;padding:11px 15px;
+  margin-top:10px;font-size:.95rem;border-right:3px solid var(--gold);
+}
+.ex b{color:var(--gold)}
+.why{
+  background:var(--green-soft);border-radius:10px;padding:10px 14px;
+  margin-top:8px;font-size:.93rem;
+}
+.why.red-bg{background:var(--red-soft)}
+
+/* شبكة الأمثلة المبسطة */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin:12px 0}
+.mini-card{
+  background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+}
+.mini-card h4{font-size:.98rem;color:var(--gold);margin-bottom:6px}
+
+/* الأكورديون */
+.acc{
+  background:var(--card);border-radius:14px;box-shadow:var(--shadow);
+  margin-bottom:16px;overflow:hidden;border:1px solid var(--border);
+}
+.acc-btn{
+  width:100%;background:none;border:none;font-family:inherit;font-size:1.06rem;font-weight:700;
+  color:var(--ink);padding:18px 22px;display:flex;justify-content:space-between;align-items:center;
+  gap:12px;cursor:pointer;text-align:right;transition:background .25s,color .25s;
+}
+.acc-btn:hover{background:var(--gold-soft)}
+.acc-label{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.acc-btn .ar{transition:transform .35s;color:var(--gold);font-size:1.05rem;flex-shrink:0}
+.acc.open .acc-btn .ar{transform:rotate(180deg)}
+.acc-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.acc.open .acc-panel{grid-template-rows:1fr}
+.acc-body{overflow:hidden;padding:0 22px}
+.acc.open .acc-body{padding:4px 22px 22px}
+
+/* الجداول */
+.table-wrap{overflow-x:auto;margin:14px 0;border-radius:12px;box-shadow:var(--shadow)}
+table{
+  width:100%;border-collapse:collapse;background:var(--card);
+  font-size:.94rem;min-width:540px;
+}
+th{background:var(--gold);color:#fff;padding:12px 14px;font-size:.95rem;text-align:right}
+td{padding:13px 14px;border-bottom:1px solid var(--paper2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--gold-soft)}
+
+/* البطاقات القابلة للقلب */
+.flips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px}
+.flip{perspective:1000px;min-height:195px;cursor:pointer}
+.flip-in{
+  position:relative;width:100%;height:100%;min-height:195px;
+  transition:transform .6s;transform-style:preserve-3d;
+}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.f-front,.f-back{
+  position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;
+  border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:18px;text-align:center;
+}
+.f-front{
+  background:var(--card);border:2px dashed var(--gold);box-shadow:var(--shadow);font-weight:700;font-size:1.1rem;
+}
+.f-front small{color:var(--ink2);margin-top:8px;font-weight:400;font-size:.86rem}
+.f-back{
+  background:var(--green);color:#fff;transform:rotateY(180deg);
+  font-size:1.02rem;line-height:1.7;box-shadow:var(--shadow);
+}
+.f-back .f-ex{
+  margin-top:8px;background:rgba(255,255,255,.16);padding:4px 12px;
+  border-radius:8px;font-family:'Scheherazade New',serif;font-size:1.25rem;
+}
+
+/* قسم الاختبار */
+.quiz-bar{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;
+  gap:10px;margin-bottom:16px;background:var(--card);padding:12px 18px;
+  border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+}
+.q{
+  background:var(--card);border-radius:14px;box-shadow:var(--shadow);
+  padding:20px 22px;margin-bottom:16px;border:1px solid var(--border);
+}
+.q p.qt{font-weight:700;margin-bottom:12px;font-size:1.02rem}
+.opts{display:grid;gap:9px}
+.opt{
+  width:100%;text-align:right;font-family:inherit;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--paper2);border-radius:10px;
+  padding:11px 16px;cursor:pointer;transition:.22s;font-size:.95rem;
+}
+.opt:hover:not([disabled]){border-color:var(--gold);transform:translateX(-4px);background:var(--gold-soft)}
+.opt.ok{background:var(--green)!important;color:#fff!important;border-color:var(--green)!important;font-weight:600}
+.opt.no{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important}
+.opt[disabled]{cursor:default;opacity:.92}
+.fb{margin-top:12px;font-size:.92rem;font-weight:600;display:none;padding:8px 12px;border-radius:8px}
+#score{
+  text-align:center;background:var(--gold);color:#fff;border-radius:14px;padding:18px;
+  font-weight:700;font-size:1.12rem;margin-top:14px;display:none;box-shadow:var(--shadow);
+}
+
+/* كشف بالتمرير الآمن بدون إخفاء المحتوى */
+.rv{opacity:1;transform:none}
+
+footer{text-align:center;padding:36px 20px;border-top:3px double var(--gold);color:var(--ink2);font-size:.95rem}
+#theme{
+  position:fixed;bottom:22px;left:22px;background:var(--card);border:2px solid var(--gold);
+  border-radius:50%;width:50px;height:50px;font-size:1.3rem;cursor:pointer;
+  box-shadow:var(--shadow);z-index:99;display:flex;align-items:center;justify-content:center;
+  transition:transform .25s;
+}
+#theme:hover{transform:scale(1.08)}
+@media(max-width:640px){
+  .lead{padding-right:0}
+  header{padding:52px 16px 34px}
+  .acc-btn{padding:15px 16px;font-size:.98rem}
+  .acc.open .acc-body{padding:4px 16px 18px}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="theme" type="button" title="تبديل الوضع الليلي والنهاري" aria-label="تبديل الوضع">🌙</button>
+
+<header>
+  <div class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+  <h1>المحاضرة <b>الخامسة والعشرون</b></h1>
+  <p class="sub">كتاب <b>شرح قَطْر النَّدَى وبَلّ الصَّدَى</b> لابن هشام (ص ١٣١–١٣٦) — شرح مبسّط جداً يفهمه الجميع</p>
+
+  <div class="intro-box">
+    💡 <b>فكرة المحاضرة باختصار شديد:</b><br>
+    نتعلّم هنا شيئين فقط في الجملة الاسمية:
+    <b>(١)</b> متى نضع الخبر قبل المبتدأ أو نحذف أحدهما من الكلام؟
+    <b>(٢)</b> كيف تدخل <b>«كان وأخواتها»</b> على الجملة فتغيّر إعرابها وما شروط عملها؟
+  </div>
+
+  <nav class="chips" aria-label="أقسام المحاضرة">
+    <button type="button" class="chip" data-target="s1">١ · تقديم الخبر على المبتدأ</button>
+    <button type="button" class="chip" data-target="s2">٢ · حذف المبتدأ أو الخبر</button>
+    <button type="button" class="chip" data-target="s3">٣ · النواسخ: كان وأخواتها</button>
+    <button type="button" class="chip" data-target="quiz">✍ اختبر فهمك</button>
+  </nav>
+</header>
+
+<!-- القسم الأول -->
+<section id="s1" class="wrap">
+  <div class="shead rv">
+    <div class="shead-title">
+      <div class="num">١</div>
+      <h2>متى يأتي الخبر قبل المبتدأ؟ (ص ١٣١)</h2>
+    </div>
+    <button type="button" class="toggle-all" id="toggleAccBtn">فتح جميع البطاقات ⬇</button>
+  </div>
+  <p class="lead rv">
+    <b>القاعدة الطبيعية:</b> في الجملة الاسمية نذكر <b>الشيء الذي نتحدث عنه أولاً</b> (المبتدأ)، ثم نذكر <b>المعلومة التي نخبر بها عنه ثانياً</b> (الخبر)، مثل: «زيدٌ في الدارِ». لكن أحياناً نقلب الترتيب فيأتي <b>الخبر أولاً</b> على حالتين:
+  </p>
+  <div class="divider">۞ ۞ ۞</div>
+
+  <!-- الحالة الأولى: جوازاً -->
+  <div class="acc rv open">
+    <button type="button" class="acc-btn">
+      <span class="acc-label">✅ الحالة الأولى: تقديم الخبر اختيارياً (جوازاً — أنت بالخيار) <span class="tag g">اختياري</span></span>
+      <span class="ar">▼</span>
+    </button>
+    <div class="acc-panel"><div class="acc-body">
+      <p>إذا كان المعنى واضحاً في الحالتين ولا يحدث أي التباس، يجوز أن تبدأ بالخبر أو بالمبتدأ كما تشاء:</p>
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>مثال من الكلام اليومي</h4>
+          <p>تقول: <b>«في الدارِ زيدٌ»</b> أو <b>«زيدٌ في الدارِ»</b> — كلاهما صحيح تماماً.</p>
+        </div>
+        <div class="mini-card">
+          <h4>أمثلة القرآن الكريم في الكتاب</h4>
+          <p><span class="aya">﴿سَلَامٌ هِيَ﴾</span> [القدر: ٥] ← أصلها: <b>هي سلامٌ</b>.</p>
+          <p><span class="aya">﴿وَآيَةٌ لَّهُمُ اللَّيْلُ﴾</span> [يس: ٣٧] ← أصلها: <b>الليلُ آيةٌ لهم</b>.</p>
+        </div>
+      </div>
+      <div class="ex">
+        💡 <b>سؤال ذكي: لماذا اعتبرنا «هي» و«الليل» هما المبتدأ مع أنهما جاءا في آخر الجملة؟</b><br>
+        لأن كلمة <b>«هي»</b> وكلمة <b>«الليل»</b> معروفتان ومحددتان (<b>معرفة</b>)، بينما <b>«سلام»</b> و<b>«آية»</b> كلمتان عامتان (<b>نكرة</b>). وفي اللغة العربية نحن نتحدث عن الشيء المعروف («الليل») ونخبر عنه بمعلومة («أنه آية»)، ولا نفعل العكس.
+      </div>
+    </div></div>
+  </div>
+
+  <!-- الحالة الثانية: وجوباً -->
+  <div class="acc rv open">
+    <button type="button" class="acc-btn">
+      <span class="acc-label">⚠️ الحالة الثانية: تقديم الخبر إجبارياً (وجوباً — في ٣ حالات فقط) <span class="tag r">إجباري</span></span>
+      <span class="ar">▼</span>
+    </button>
+    <div class="acc-panel"><div class="acc-body">
+      <p style="margin-bottom:12px">في هذه الحالات الثلاث <b>أنت مجبر</b> أن تضع الخبر في البداية، ولا يصح إرجاعه إلى آخر الجملة:</p>
+
+      <div class="rule warn">
+        <div class="rule-title"><span class="tag r">١</span> إذا كان المبتدأ كلمة نكرة (غير محددة) والخبر جاراً ومجروراً أو ظرفاً</div>
+        <p><b>المثال:</b> <b>«في الدارِ رجلٌ»</b> (في الدار: خبر مقدّم · رجلٌ: مبتدأ مؤخّر).</p>
+        <div class="why red-bg">
+          <b>لماذا التقديم إجباري هنا؟</b> لأنك لو بدأت بالنكرة وقلت: <i>«رجلٌ في الدارِ...»</i> سيظن السامع أن «في الدار» مجرد <b>صفة</b> للرجل، وسيبقى ينتظر منك تكملة الجملة: (ما به الرجل الذي في الدار؟). فلما قدّمنا الخبر وقلنا «في الدارِ رجلٌ» فهم السامع فوراً أنها جملة تامة.
+        </div>
+      </div>
+
+      <div class="rule warn">
+        <div class="rule-title"><span class="tag r">٢</span> إذا كان الخبر أداة سؤال (اسم استفهام)</div>
+        <p><b>المثال:</b> <b>«أينَ زيدٌ؟»</b> (أين: خبر مقدّم · زيدٌ: مبتدأ مؤخّر).</p>
+        <div class="why red-bg">
+          <b>لماذا التقديم إجباري هنا؟</b> لأن أدوات الاستفهام (مثل: أين، متى، كيف) لها <b>صدارة الكلام</b>، أي مكانها دائماً في أول الجملة في اللغة العربية، فلا يصح في الفصحى أن نقول: <i>«زيدٌ أين؟»</i>.
+        </div>
+      </div>
+
+      <div class="rule warn">
+        <div class="rule-title"><span class="tag r">٣</span> إذا كان في المبتدأ ضمير يعود على كلمة داخل الخبر</div>
+        <p><b>المثال:</b> قول العرب: <b>«على التَّمْرَةِ مِثْلُهَا زُبْداً»</b> (ومعنى هذا المثل: فوق التمرة قطعة زبد بحجم التمرة).</p>
+        <div class="why red-bg">
+          <b>لماذا التقديم إجباري هنا؟</b> انظر إلى كلمة <b>«مثلُها»</b> (المبتدأ)؛ فيها الضمير <b>(ها)</b> الذي يعود على <b>«التمرة»</b>. وفي العربية لا يصح أن ننطق الضمير قبل أن نذكر الاسم الذي يعود عليه؛ فلو قلنا: <i>«مثلُها زبداً على التمرة»</i> لذكرنا الضمير «ها» قبل «التمرة»، وهذا ممنوع.
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- القسم الثاني -->
+<section id="s2" class="wrap">
+  <div class="shead rv">
+    <div class="shead-title">
+      <div class="num">٢</div>
+      <h2>متى نحذف المبتدأ أو الخبر من الجملة؟ (ص ١٣١–١٣٣)</h2>
+    </div>
+  </div>
+  <p class="lead rv">
+    أحياناً نحذف المبتدأ أو الخبر من الكلام ولا ننطقه؛ إما <b>اختياراً (جوازاً)</b> لأن المعنى مفهوم من الكلام، وإما <b>إجباراً (وجوباً)</b> لأن قاعدة الجملة تفرض حذفه.
+  </p>
+  <div class="divider">۞ ۞ ۞</div>
+
+  <!-- أولاً: الحذف الجائز -->
+  <div class="rule gold rv">
+    <div class="rule-title"><span class="tag y">أولاً: الحذف الاختياري (الجائز)</span> إذا فهم السامع الكلمة المحذوفة تلقائياً من السياق</div>
+    <p>متى دلّ سياق الكلام على الكلمة المحذوفة، جاز حذفها للاختصار وجاز ذكرها:</p>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>١. حذف المبتدأ فقط</h4>
+        <p>• قوله تعالى: <span class="aya">﴿قُلْ أَفَأُنَبِّئُكُم بِشَرٍّ مِّن ذَٰلِكُمُ النَّارُ﴾</span><br>
+        المعنى المفهوم: <b>هي</b> النارُ (حُذفت «هي»).</p>
+        <p style="margin-top:6px">• قوله تعالى: <span class="aya">﴿سُورَةٌ أَنزَلْنَاهَا﴾</span><br>
+        المعنى المفهوم: <b>هذه</b> سورةٌ (حُذفت «هذه»).</p>
+      </div>
+      <div class="mini-card">
+        <h4>٢. حذف الخبر فقط</h4>
+        <p>• قوله تعالى: <span class="aya">﴿أُكُلُهَا دَائِمٌ وَظِلُّهَا﴾</span><br>
+        المعنى: أكلها دائمٌ، وظلُّها <b>دائمٌ</b> أيضاً (حُذفت الثانية لوضوحها).</p>
+        <p style="margin-top:6px">• قوله تعالى: <span class="aya">﴿قُلْ أَأَنتُمْ أَعْلَمُ أَمِ اللَّهُ﴾</span><br>
+        المعنى: أم اللهُ <b>أعلمُ</b>.</p>
+      </div>
+    </div>
+
+    <div class="ex">
+      ✨ <b>آية كريمة جمعت الحذفين معاً (حذف الخبر في الأولى، وحذف المبتدأ في الثانية):</b><br>
+      قوله تعالى عن ضيوف إبراهيم عليه السلام: <span class="aya">﴿سَلَامٌ قَوْمٌ مُّنكَرُونَ﴾</span> [الذاريات: ٢٥]:<br>
+      • <b>«سَلَامٌ»:</b> مبتدأ حُذف خبره، وأصلها: «سلامٌ <b>عليكم</b>».<br>
+      • <b>«قَوْمٌ»:</b> خبر حُذف مبتدؤه، وأصلها: «<b>أنتم</b> قومٌ منكرون» (أي غرباء لا نعرفكم).
+    </div>
+  </div>
+
+  <!-- ثانياً: حذف الخبر وجوباً -->
+  <div class="rule warn rv">
+    <div class="rule-title"><span class="tag r">ثانياً: حذف الخبر إجبارياً (الواجب)</span> في ٤ مواضع لا يصح فيها نطق الخبر</div>
+    <p>هنا <b>ممنوع</b> أن تنطق الخبر؛ لأن جزءاً آخر في الجملة أغنى عنه تماماً وسدّ مكانه:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>الموضع</th>
+            <th>المثال من الكتاب</th>
+            <th>التقدير المحذوف</th>
+            <th>الفكرة ببساطة (لماذا حُذف إجبارياً؟)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>١ · قبل جواب «لولا»</b></td>
+            <td><span class="aya">﴿لَوْلَا أَنتُمْ لَكُنَّا مُؤْمِنِينَ﴾</span></td>
+            <td>لولا أنتم <b>صددتمونا</b> عن الهدى (وفي غير الآية: لولا أنتم <b>موجودون</b>)</td>
+            <td>جملة الجواب («لكنا مؤمنين») تغني عن ذكر الخبر بعد «لولا» فلا يُنطق.</td>
+          </tr>
+          <tr>
+            <td><b>٢ · قبل جواب القَسَم (الحَلِف) الصريح</b></td>
+            <td><b>«لَعَمْرُكَ لأفعلنَّ»</b><br><span class="aya">﴿لَعَمْرُكَ إِنَّهُمْ لَفِي سَكْرَتِهِمْ يَعْمَهُونَ﴾</span></td>
+            <td>لعمرك <b>قَسَمي</b> أو <b>يميني</b></td>
+            <td>كلمة «لعمرك» معناها (حياتك قَسَمي) ولا تُستعمل إلا في الحَلِف، فجواب القسم بعدها يغني عن كلمة «قسمي».<br><small>*(أما «عهدُ اللهِ» فتُستعمل في الحلف وغيره، لذا يجوز ذكر خبرها: عليَّ عهدُ اللهِ)*.</small></td>
+          </tr>
+          <tr>
+            <td><b>٣ · قبل الحال التي لا تصلح أن تكون خبراً</b></td>
+            <td><b>«ضَرْبِي زَيْداً قَائِماً»</b><br><small>ومثله: «أكثرُ شربي السويقَ ملتوتاً»</small></td>
+            <td>ضربي زيداً <b>حاصلٌ إذا كان</b> قائماً</td>
+            <td>المعنى: (أضرب زيداً وقت كونه واقفاً). هنا لا يصح أن نقول «ضربي قائمٌ» لأن الضرب شيء معنوي لا يقف! فكلمة «قائماً» (حال من زيد) أغنت عن الخبر.<br><small>*(فلو صلحت الكلمة خبراً للمصدر وجب رفعها مثل: «ضربي زيداً شديدٌ»)*.</small></td>
+          </tr>
+          <tr>
+            <td><b>٤ · بعد واو المصاحبة (التي بمعنى «مع»)</b></td>
+            <td><b>«كُلُّ رَجُلٍ وَضَيْعَتُهُ»</b><br><small>(الضيعة: الحرفة أو الصنعة)</small></td>
+            <td>كل رجل مع حرفته <b>مقرونان / متلازمان</b></td>
+            <td>الواو هنا بمعنى «مع»؛ فحين تقول «كل إنسان وعمله» يفهم السامع فوراً أنهما <b>متلازمان</b> دون حاجة لنطق الكلمة.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ex">
+      📌 <b>فائدة إضافية (من هامش المحقق ص ١٣٢ — مواضع حذف المبتدأ إجبارياً الأربعة):</b><br>
+      يُحذف <b>المبتدأ</b> أيضاً وجوباً في ٤ مواضع:
+      <b>(١)</b> مع الصفة المرفوعة للمدح أو الذم مثل «الحمدُ للهِ <b>الحميدُ</b>» (أي: <b>هو</b> الحميدُ)،
+      <b>(٢)</b> مع مخصوص «نِعْمَ وبِئْسَ» مثل «نِعْمَ الرجلُ <b>زيدٌ</b>» (أي: <b>هو</b> زيدٌ)،
+      <b>(٣)</b> إذا كان الخبر صريحاً في القسم مثل «في ذمتي لأفعلنَّ» (أي: في ذمتي <b>يمينٌ</b>)،
+      <b>(٤)</b> إذا كان الخبر مصدراً نائباً عن فعله مثل <span class="aya">﴿فَصَبْرٌ جَمِيلٌ﴾</span> (أي: <b>فأمري</b> صبرٌ جميلٌ).
+    </div>
+  </div>
+</section>
+
+<!-- القسم الثالث -->
+<section id="s3" class="wrap">
+  <div class="shead rv">
+    <div class="shead-title">
+      <div class="num">٣</div>
+      <h2>النواسخ: باب «كان وأخواتها» (ص ١٣٣–١٣٦)</h2>
+    </div>
+  </div>
+  <p class="lead rv">
+    كلمة <b>«نواسخ»</b> في اللغة تعني <b>الإزالة والتغيير</b> (تقول العرب: نسخت الشمسُ الظلَّ، أي أزالته). وفي النحو: المبتدأ والخبر كلاهما مرفوعان (مثل: «زيدٌ قائمٌ»)، فإذا دخلت عليهما <b>النواسخ</b> غيّرت هذا الإعراب، وهي <b>ثلاث عائلات</b> (اضغط على كل بطاقة لترى عملها ومثالها):
+  </p>
+  <div class="divider">۞ ۞ ۞</div>
+
+  <div class="flips rv">
+    <div class="flip"><div class="flip-in">
+      <div class="f-front">١ · عائلة «كان وأخواتها»<small>اضغط لقلب البطاقة ↺</small></div>
+      <div class="f-back">
+        <b>ترفع المبتدأ</b> (اسمها)<br>و<b>تنصب الخبر</b> (خبرها)
+        <div class="f-ex">كانَ زيدٌ قائماً</div>
+      </div>
+    </div></div>
+    <div class="flip"><div class="flip-in">
+      <div class="f-front">٢ · عائلة «إنَّ وأخواتها»<small>اضغط لقلب البطاقة ↺</small></div>
+      <div class="f-back">
+        <b>تنصب المبتدأ</b> (اسمها)<br>و<b>ترفع الخبر</b> (خبرها)
+        <div class="f-ex">إنَّ زيداً قائمٌ</div>
+      </div>
+    </div></div>
+    <div class="flip"><div class="flip-in">
+      <div class="f-front">٣ · عائلة «ظنَّ وأخواتها»<small>اضغط لقلب البطاقة ↺</small></div>
+      <div class="f-back">
+        <b>تنصب الاثنين معاً</b><br>(مفعول أول + مفعول ثانٍ)
+        <div class="f-ex">ظننتُ زيداً قائماً</div>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="rule gold rv" style="margin-top:24px">
+    <span class="tag y">القاعدة الأساسية لـ «كان وأخواتها»</span>
+    عددها <b>١٣ فعلاً</b>، وكلها تعمل عملاً واحداً: <b>ترفع المبتدأ وتنصب الخبر</b>، مثل قوله تعالى:
+    <span class="aya">﴿وَكَانَ رَبُّكَ قَدِيراً﴾</span> (ربُّك: اسم كان مرفوع · قديراً: خبرها منصوب).
+  </div>
+
+  <h3 class="subhead rv">۞ تقسيم أفعال «كان وأخواتها» (١٣ فعلاً) حسب شروط عملها</h3>
+  <div class="table-wrap rv">
+    <table>
+      <thead>
+        <tr>
+          <th>المجموعة</th>
+          <th>الأفعال</th>
+          <th>شرط عملها ببساطة</th>
+          <th>الأمثلة والشواهد من المحاضرة</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>١ · تعمل بدون أي شرط</b><br><span class="tag g">٨ أفعال</span></td>
+          <td><b>كان، أمسى، أصبح، أضحى، ظلَّ، بات، صار، ليس</b><br><small>(ويلحق بـ «صار» ٧ أفعال بمعنى التحوّل: آض، رجع، عاد، استحال، حار، راح، تحوّل)</small></td>
+          <td>تعمل دائماً في أي جملة دون أن تحتاج لأي أداة تسبقها.</td>
+          <td><span class="aya">﴿وَكَانَ رَبُّكَ قَدِيراً﴾</span></td>
+        </tr>
+        <tr>
+          <td><b>٢ · تعمل بشرط أن يسبقها نفي أو شبهه</b><br><span class="tag b">٤ أفعال</span></td>
+          <td><b>زالَ، بَرِحَ، فَتِئَ، انْفَكَّ</b><br><small>(وكلها بمعنى واحد: استمرّ وما زال)</small></td>
+          <td>يجب أن يسبقها:<br>١. <b>نفي</b> (لا، ما، لن)<br>٢. أو <b>نهي</b> (لا تفعل)<br>٣. أو <b>دعاء</b></td>
+          <td>
+            • <b>النفي:</b> <span class="aya">﴿وَلَا يَزَالُونَ مُخْتَلِفِينَ﴾</span>، و<span class="aya">﴿لَن نَّبْرَحَ عَلَيْهِ عَاكِفِينَ﴾</span>.<br>
+            • <b>النهي (شاهد ٤٠):</b> «صاحِ شَمِّرْ <b>ولا تَزَلْ ذاكرَ</b> الموتِ» (أي: استمر ذاكراً للموت).<br>
+            • <b>الدعاء (شاهد ٤١):</b> «<b>ولا زالَ مُنهلّاً</b> بجرعائكِ <b>القطرُ</b>» (يدعو لديار محبوبته ألا ينقطع عنها المطر).
+          </td>
+        </tr>
+        <tr>
+          <td><b>٣ · تعمل بشرط تقدم «ما» الدالة على المدة</b><br><span class="tag y">فعل واحد</span></td>
+          <td><b>دامَ</b> (ما دام)</td>
+          <td>يجب أن تسبقها <b>«ما» المصدرية الظرفية</b> (التي تعني: طوال مدة دوام).</td>
+          <td><span class="aya">﴿وَأَوْصَانِي بِالصَّلَاةِ وَالزَّكَاةِ مَا دُمْتُ حَيًّا﴾</span> [مريم: ٣١]<br>أي: طوال <b>مُدَّةِ دَوامي</b> حياً.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- شرح الشاهدين الشعريين والفائدتين الختاميتين -->
+  <div class="rule blue rv">
+    <div class="rule-title"><span class="tag b">توضيح الشاهدين الشعريين والفائدتين الختاميتين (ص ١٣٤–١٣٦)</span></div>
+
+    <span class="poem">شاهد (٤٠): صَاحِ شَمِّرْ، وَلَا تَزَلْ ذَاكِرَ الْمَوْتِ &nbsp;✻&nbsp; فَنِسْيَانُهُ ضَلَالٌ مُبِينُ</span>
+    <p>• <b>المعنى ببساطة:</b> يا صاحبي اجتهد في الطاعة، واستمر متذكراً للموت؛ لأن نسيانه ضلال واضح.<br>
+    • <b>موضع الشاهد:</b> قوله <b>«ولا تزلْ ذاكرَ الموتِ»</b> حيث عملت «تزل» لأنها سُبقت بـ <b>«لا» الناهية</b> (شبه النفي)، فرفعت اسمها المستتر (أنت) ونصبت خبرها (ذاكرَ).</p>
+
+    <span class="poem" style="margin-top:14px">شاهد (٤١): أَلَا يَا اسْلَمِي يَا دَارَ مَيٍّ عَلَى الْبِلَى &nbsp;✻&nbsp; وَلَا زَالَ مُنْهَلًّا بِجَرْعَائِكِ الْقَطْرُ</span>
+    <p>• <b>المعنى ببساطة:</b> الشاعر (ذو الرمة) يدعو لدار محبوبته (ميّ) أن تسلم من مرور الزمن، وأن يستمر المطر (القطر) منسكباً (منهلاً) على أرضها.<br>
+    • <b>موضع الشاهد:</b> قوله <b>«ولا زالَ منهلّاً بجرعائكِ القطرُ»</b> وفيه فائدتان:<br>
+    &nbsp;&nbsp;١. عملت «زال» لأنها سُبقت بـ <b>«لا» الدعائية</b>.<br>
+    &nbsp;&nbsp;٢. تقدَّم خبرها المنصوب (<b>مُنهلّاً</b>) على اسمها المرفوع (<b>القطرُ</b>)، وأصل الجملة: «ولا زال القطرُ منهلّاً بجرعائك».</p>
+
+    <div class="ex">
+      🌟 <b>ملاحظة مهمة جداً في نهاية المحاضرة (ص ١٣٥):</b><br>
+      قد تُحذف أداة النفي <b>«لا»</b> قبل أخوات (زال) من النطق وتُفهم من السياق بعد القَسَم، كما في قوله تعالى:
+      <span class="aya">﴿تَاللَّهِ تَفْتَأُ تَذْكُرُ يُوسُفَ﴾</span> [يوسف: ٨٥]، والمعنى: تالله <b>لا تفتأُ</b> (أي: ما تزال) تذكر يوسف.
+    </div>
+  </div>
+</section>
+
+<!-- قسم الاختبار التفاعلي -->
+<section id="quiz" class="wrap">
+  <div class="shead rv">
+    <div class="shead-title">
+      <div class="num">✍</div>
+      <h2>اختبر فهمك للمحاضرة</h2>
+    </div>
+  </div>
+  <div class="quiz-bar rv">
+    <span id="q-status">أجب عن الأسئلة السبعة التالية لتتأكد من استيعابك الكامل للمحاضرة:</span>
+    <button type="button" class="toggle-all" id="resetQuizBtn">إعادة الاختبار 🔄</button>
+  </div>
+  <div id="qbox"></div>
+  <div id="score"></div>
+</section>
+
+<footer>۞ تمّ بحمد الله — ملخص المحاضرة الخامسة والعشرين من شرح قطر الندى وبلّ الصدى ۞</footer>
+
+<script>
+(function(){
+  const progressEl = document.getElementById('progress');
+  const themeBtn = document.getElementById('theme');
+  const toggleAccBtn = document.getElementById('toggleAccBtn');
+  const resetQuizBtn = document.getElementById('resetQuizBtn');
+  const qbox = document.getElementById('qbox');
+  const scoreEl = document.getElementById('score');
+  const statusEl = document.getElementById('q-status');
+
+  // شريط التقدم العلوي
+  window.addEventListener('scroll', function(){
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    progressEl.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  });
+
+  // التنقل السلس الآمن داخل الصفحة بدون تغيير الرابط أو التسبب بشاشة سوداء
+  document.querySelectorAll('.chip[data-target]').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      const targetId = btn.getAttribute('data-target');
+      const targetEl = document.getElementById(targetId);
+      if(targetEl){
+        const topPos = targetEl.getBoundingClientRect().top + window.pageYOffset - 16;
+        window.scrollTo({ top: topPos, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // الأكورديون
+  const accList = document.querySelectorAll('.acc');
+  document.querySelectorAll('.acc-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+
+  // زر فتح / طي جميع البطاقات
+  let allOpen = true;
+  toggleAccBtn.addEventListener('click', function(){
+    allOpen = !allOpen;
+    accList.forEach(function(acc){
+      acc.classList.toggle('open', allOpen);
+    });
+    toggleAccBtn.textContent = allOpen ? 'طيّ جميع البطاقات ⬆' : 'فتح جميع البطاقات ⬇';
+  });
+
+  // البطاقات القابلة للقلب
+  document.querySelectorAll('.flip').forEach(function(f){
+    f.addEventListener('click', function(){
+      f.classList.toggle('on');
+    });
+  });
+
+  // تبديل الوضع الليلي والنهاري
+  themeBtn.addEventListener('click', function(){
+    document.body.classList.toggle('dark');
+    themeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  });
+
+  // أسئلة الاختبار
+  const QS = [
+    {
+      q: 'في جملة «في الدارِ رجلٌ» — لماذا وجب تقديم الخبر (في الدار) على المبتدأ (رجل)؟',
+      o: ['لأن الخبر أداة استفهام', 'لأن المبتدأ نكرة والخبر شبه جملة، فلو تأخر لظُنّ صفةً', 'لأن في المبتدأ ضميراً يعود على الخبر'],
+      a: 1,
+      f: 'لو قلنا «رجلٌ في الدار...» لظن السامع أن «في الدار» صفة للرجل ولانتظر تكملة الجملة.'
+    },
+    {
+      q: 'في قوله تعالى ﴿سَلَامٌ هِيَ﴾ — ما إعراب كلمة «هي» ولماذا؟',
+      o: ['مبتدأ مؤخّر جوازاً لأنها معرفة و«سلام» نكرة', 'خبر مؤخّر وجوباً', 'فاعل مرفوع'],
+      a: 0,
+      f: '«هي» معرفة و«سلام» نكرة، والأصل أن نخبر عن المعرفة بالنكرة، فـ «هي» مبتدأ مؤخّر جوازاً.'
+    },
+    {
+      q: 'في قول العرب «على التمرةِ مثلُها زبداً» — لماذا يمتنع تأخير الخبر؟',
+      o: ['لأن المبتدأ اسم استفهام', 'لأن في المبتدأ «مثلها» ضميراً يعود على «التمرة» في الخبر', 'لأن الخبر محذوف وجوباً'],
+      a: 1,
+      f: 'الضمير (ها) في «مثلها» يعود على «التمرة»، فلا يصح أن نذكر الضمير قبل الاسم الذي يعود عليه.'
+    },
+    {
+      q: 'في قوله تعالى ﴿لَوْلَا أَنتُمْ لَكُنَّا مُؤْمِنِينَ﴾ — ما حكم الخبر بعد «لولا»؟',
+      o: ['مذكور في الآية', 'محذوف وجوباً لأن جملة الجواب أغنت عنه', 'محذوف جوازاً فقط'],
+      a: 1,
+      f: 'بعد «لولا» الامتناعية يجب حذف الخبر؛ لأن جملة الجواب («لكنا مؤمنين») تسدّ مسدّه.'
+    },
+    {
+      q: 'ما عمل أفعال «كان وأخواتها» حين تدخل على المبتدأ والخبر؟',
+      o: ['ترفع المبتدأ (اسمها) وتنصب الخبر (خبرها)', 'تنصب المبتدأ وترفع الخبر', 'تنصب المبتدأ والخبر معاً'],
+      a: 0,
+      f: 'كان وأخواتها ترفع الأول اسماً لها وتنصب الثاني خبراً لها، مثل: ﴿وَكَانَ رَبُّكَ قَدِيراً﴾.'
+    },
+    {
+      q: 'الأفعال الأربعة (زال، بَرِح، فتئ، انفكّ) لا تعمل عمل «كان» إلا إذا سبقها:',
+      o: ['«ما» المصدرية الظرفية فقط', 'نفي أو شبه نفي (وهو النهي أو الدعاء)', 'حرف جر'],
+      a: 1,
+      f: 'يشترط لأخوات «زال» أن يسبقها نفي أو نهي أو دعاء، وقد يُحذف حرف النفي بعد القسم مثل ﴿تَاللَّهِ تَفْتَأُ تَذْكُرُ يُوسُفَ﴾.'
+    },
+    {
+      q: 'ما الشرط الخاص لعمل الفعل «دامَ» في نحو قوله تعالى ﴿مَا دُمْتُ حَيًّا﴾؟',
+      o: ['أن يسبقه استفهام', 'أن تسبقه «ما» المصدرية الظرفية (بمعنى مدة دوام)', 'يعمل بلا أي شرط'],
+      a: 1,
+      f: 'يعمل الفعل «دام» بشرط أن تسبقه «ما» المصدرية الظرفية، أي: طوال مدة دوامي حياً.'
+    }
+  ];
+
+  let done = 0, pts = 0;
+
+  function renderQuiz(){
+    done = 0; pts = 0;
+    qbox.innerHTML = '';
+    scoreEl.style.display = 'none';
+    statusEl.textContent = 'أجب عن الأسئلة السبعة التالية لتتأكد من استيعابك الكامل للمحاضرة:';
+
+    QS.forEach(function(item, i){
+      const d = document.createElement('div');
+      d.className = 'q rv vis';
+      d.innerHTML =
+        '<p class="qt">' + (i + 1) + ') ' + item.q + '</p>' +
+        '<div class="opts">' +
+          item.o.map(function(o, j){
+            return '<button type="button" class="opt" data-i="' + i + '" data-j="' + j + '">' + o + '</button>';
+          }).join('') +
+        '</div>' +
+        '<div class="fb"></div>';
+      qbox.appendChild(d);
+    });
+  }
+
+  qbox.addEventListener('click', function(e){
+    const o = e.target.closest('.opt');
+    if(!o || o.hasAttribute('disabled')) return;
+    const i = Number(o.dataset.i);
+    const chosen = Number(o.dataset.j);
+    const q = QS[i];
+    const ok = chosen === q.a;
+
+    o.parentElement.querySelectorAll('.opt').forEach(function(x){
+      x.setAttribute('disabled', '');
+      if(Number(x.dataset.j) === q.a) x.classList.add('ok');
+    });
+    if(!ok) o.classList.add('no');
+
+    if(ok) pts++;
+    done++;
+
+    const fb = o.closest('.q').querySelector('.fb');
+    fb.style.display = 'block';
+    fb.style.background = ok ? 'var(--green-soft)' : 'var(--red-soft)';
+    fb.style.color = ok ? 'var(--green)' : 'var(--red)';
+    fb.textContent = (ok ? '✔ إجابة صحيحة! ' : '✘ الإجابة غير صحيحة. ') + q.f;
+
+    statusEl.textContent = 'أجبت عن ' + done + ' من ' + QS.length + ' أسئلة (النقاط الحالية: ' + pts + ')';
+
+    if(done === QS.length){
+      scoreEl.style.display = 'block';
+      scoreEl.textContent = 'نتيجتك النهائية: ' + pts + ' من ' + QS.length + ' ' +
+        (pts === QS.length ? '— ممتاز جداً، استوعبت المحاضرة بالكامل! 🏆' :
+         pts >= 5 ? '— جيد جداً، راجع النقاط البسيطة التي فاتتك 👏' :
+         '— اقرأ الشرح المبسّط بالأعلى ثم اضغط «إعادة الاختبار» 💪');
+    }
+  });
+
+  resetQuizBtn.addEventListener('click', renderQuiz);
+  renderQuiz();
+})();
+</script>
+</body>
+</html>
